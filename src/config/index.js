@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 const config = {
   YOUTUBE_RAPID_API_BASE_URL: process.env.YOUTUBE_RAPID_API_BASE_URL,
   YOUTUBE_CHANNEL_ID: process.env.YOUTUBE_CHANNEL_ID,

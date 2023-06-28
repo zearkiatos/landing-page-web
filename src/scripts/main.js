@@ -1,6 +1,7 @@
 import config from "../config";
+
 const url = `https://${config.YOUTUBE_RAPID_API_BASE_URL}/playlist?id=${config.YOUTUBE_CHANNEL_ID}`;
-const content = null || document.getElementById("content");
+const content = document.getElementById("content") || null;
 const options = {
   method: "GET",
   headers: {
@@ -10,6 +11,7 @@ const options = {
 };
 
 const fetchData = async (urlApi) => {
+  console.log(urlApi);
   const response = await fetch(urlApi, options);
   const data = response.json();
 
@@ -39,6 +41,7 @@ const fetchData = async (urlApi) => {
           .slice(0, 4)
           .join(" ")}
         `;
+    content.innerHTML = view;
   } catch (ex) {
     console.error(ex);
   }
