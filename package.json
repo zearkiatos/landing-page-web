@@ -1,6 +1,6 @@
 {
   "name": "landing-page-web",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This a landing page 📄 web project for improve javascript 🟨 asynchronism ♻️",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/zearkiatos/landing-page-web#readme",
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.18.6"
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@octokit/core": "^4.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
