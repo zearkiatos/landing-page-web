@@ -1,0 +1,61 @@
+name: Webpack CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Create .env
+        run: |
+          touch .env &&
+          echo "ENVIRONMENT=${ENVIRONMENT}" > .env
+          echo "YOUTUBE_RAPID_API_BASE_URL=${YOUTUBE_RAPID_API_BASE_URL}" >> .env
+          echo "YOUTUBE_CHANNEL_ID=${YOUTUBE_CHANNEL_ID}" >> .env
+          echo "RAPID_API_KEY=${RAPID_API_KEY}" >> .env
+          echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> .env
+          echo "GITHUB_BASE_URL_API=${GITHUB_BASE_URL_API}" >> .env
+          echo "GITHUB_API_VERSION=${GITHUB_API_VERSION}" >> .env
+        env:
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+          YOUTUBE_RAPID_API_BASE_URL: ${{secrets.YOUTUBE_RAPID_API_BASE_URL}}
+          YOUTUBE_CHANNEL_ID: ${{secrets.YOUTUBE_CHANNEL_ID}}
+          RAPID_API_KEY: ${{secrets.RAPID_API_KEY}}
+          GITHUB_TOKEN: ${{secrets.TOKEN}}
+          GITHUB_BASE_URL_API: ${{secrets.BASE_URL_API}}
+          GITHUB_API_VERSION: ${{secrets.API_VERSION}}
+      - name: Generate build number
+        run: echo "The build number $GITHUB_RUN_NUMBER 🏗"
+      - name: Build docker 🐳
+        run: docker build . -t=landing-page-web:github-build-$GITHUB_RUN_NUMBER
+      - name: Build Static Web site 🏗
+        run: |
+          npm install -g webpack
+          npm run webpack
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./dist
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
