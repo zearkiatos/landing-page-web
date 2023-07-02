@@ -35,6 +35,7 @@ jobs:
       - name: Build Static Web site 🏗
         run: |
           npm install -g webpack
+          npm install
           npm run webpack
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
